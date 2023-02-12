@@ -8,5 +8,5 @@ RUN dotnet publish -c Release -o /build/bin
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=builder /build/bin .
-EXPOSE 1337
+EXPOSE 3337
 ENTRYPOINT ["dotnet", "TeddySwapCardanoMetadataService.dll"]

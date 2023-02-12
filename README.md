@@ -1,3 +1,5 @@
+
+
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 <!--
@@ -12,7 +14,9 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-
+  
+[![Docker Image CI](https://github.com/teddy-swap/cardano-metadata-service/actions/workflows/docker-image.yml/badge.svg)](https://github.com/teddy-swap/cardano-metadata-service/actions/workflows/docker-image.yml)
+  
   <h3 align="center">Cardano Token Metadata Service API</h3>
 
   <p align="center">
@@ -25,7 +29,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This ia simple Cardano Offchain Token Registry implementation written in .NET/C#. For more information about the Cardano Offchain Token Registry, check out the official Cardano Foundation repository: https://github.com/cardano-foundation/cardano-token-registry.
+This ia simple Cardano Offchain Token Registry API Server implementation written in .NET/C#. For more information about the Cardano Offchain Token Registry, check out the official Cardano Foundation repository: https://github.com/cardano-foundation/cardano-token-registry.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -67,10 +71,17 @@ export REGISTRYREPO="cardano-token-registry"
 export GITHUBPAT=""
 ```
 
-Run the app:
+Install .NET dependencies and seed the database:
 
 ```bash
 dotnet restore
+dotnet tool install --global dotnet-ef
+dotnet ef database update
+```
+
+Run the service:
+
+```bash
 dotnet run
 ```
 

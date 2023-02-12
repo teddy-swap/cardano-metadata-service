@@ -36,7 +36,6 @@ public class GithubWorker : BackgroundService
 
             SyncState? syncState = await dbContext.SyncState.OrderByDescending(ss => ss.Date).FirstOrDefaultAsync();
 
-
             HttpClient hc = _httpClientFactory.CreateClient("Github");
             ProductInfoHeaderValue productValue = new ProductInfoHeaderValue("CardanoTokenMetadataService", Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown Version");
             ProductInfoHeaderValue commentValue = new ProductInfoHeaderValue("(+https://github.com/teddy-swap/cardano-metadata-service)");

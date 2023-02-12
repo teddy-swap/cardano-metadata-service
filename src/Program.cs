@@ -3,6 +3,22 @@ using TeddySwapCardanoMetadataService.Data;
 using TeddySwapCardanoMetadataService.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "Main",
+        policy =>
+        {
+            policy
+                .WithOrigins(
+                    "https://preview.app.teddyswap.org",
+                    "http://localhost:3000"
+                )
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 // Add services to the container.
 builder.Services.AddDbContextFactory<TokenMetadataDbContext>(options =>
 {
@@ -31,5 +47,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors("Main");
 app.Run();

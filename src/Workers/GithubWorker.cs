@@ -108,8 +108,6 @@ public class GithubWorker : BackgroundService
             else
             {
                 _logger.LogInformation("Repo: {repo} Owner: {owner} checking for changes...", _config["RegistryOwner"], _config["RegistryRepo"]);
-                //var d = a.ToString("yyyy-MM-dd'T'HH:mm:ssZ");
-                //https://api.github.com/repos/teddy-swap/testnet-token-metadata-registry/commits?since=2023-02-12T12:34:09Z
                 List<GitCommit> latestCommitsSince = new();
 
                 int page = 1;

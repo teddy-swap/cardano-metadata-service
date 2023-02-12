@@ -43,15 +43,16 @@ public class GithubWorker : BackgroundService
             hc.DefaultRequestHeaders.UserAgent.Add(commentValue);
             hc.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _config["GithubPAT"]);
 
-            IEnumerable<GitCommit>? latestCommits = await hc
-                .GetFromJsonAsync<IEnumerable<GitCommit>>(
-                    $"https://api.github.com/repos/{_config["RegistryOwner"]}/{_config["RegistryRepo"]}/commits",
-                    stoppingToken
-                );
 
             if (syncState is null)
             {
                 _logger.LogWarning("No Sync State Information, syncing all mappings...");
+
+                IEnumerable<GitCommit>? latestCommits = await hc
+                    .GetFromJsonAsync<IEnumerable<GitCommit>>(
+                        $"https://api.github.com/repos/{_config["RegistryOwner"]}/{_config["RegistryRepo"]}/commits",
+                        stoppingToken
+                    );
 
                 if (latestCommits is not null && latestCommits.Count() > 0)
                 {
@@ -132,11 +133,13 @@ public class GithubWorker : BackgroundService
                                 string subject = file.Filename
                                         .Replace("mappings/", string.Empty)
                                         .Replace(".json", string.Empty);
+                                string rawUrl = $"https://raw.githubusercontent.com/{_config["RegistryOwner"]}/{_config["RegistryRepo"]}/{resolvedCommit.Sha}/{file.Filename}";
+
                                 try
                                 {
 
                                     JsonElement mappingJson =
-                                        await hc.GetFromJsonAsync<JsonElement>(file.RawUrl);
+                                        await hc.GetFromJsonAsync<JsonElement>(rawUrl);
                                     TokenMetadata? existingMetadata = await dbContext.TokenMetadata.Where(tm => tm.Subject == subject).FirstOrDefaultAsync();
 
                                     if (existingMetadata is not null)
@@ -155,7 +158,7 @@ public class GithubWorker : BackgroundService
                                 }
                                 catch
                                 {
-                                    _logger.LogInformation("Repo: {repo} Owner: {owner} File: {file} not found, deleting metadata...", _config["RegistryOwner"], _config["RegistryRepo"], file.RawUrl);
+                                    _logger.LogInformation("Repo: {repo} Owner: {owner} File: {file} not found, deleting metadata...", _config["RegistryOwner"], _config["RegistryRepo"], rawUrl);
                                     TokenMetadata? existingMetadata = await dbContext.TokenMetadata.Where(tm => tm.Subject == subject).FirstOrDefaultAsync();
                                     if (existingMetadata is not null)
                                     {
@@ -166,6 +169,15 @@ public class GithubWorker : BackgroundService
                             }
                         }
                     }
+
+                    await dbContext.SyncState.AddAsync(new()
+                    {
+                        // @TODO handle null from API???
+                        Sha = commit.Sha ?? string.Empty,
+                        Date = commit.Commit?.Author?.Date ?? DateTime.UtcNow
+                    });
+
+                    await dbContext.SaveChangesAsync();
                 }
             }
 

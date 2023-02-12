@@ -132,21 +132,35 @@ public class GithubWorker : BackgroundService
                                 string subject = file.Filename
                                         .Replace("mappings/", string.Empty)
                                         .Replace(".json", string.Empty);
-                                JsonElement mappingJson =
-                                    await hc.GetFromJsonAsync<JsonElement>(file.RawUrl);
-                                TokenMetadata? existingMetadata = await dbContext.TokenMetadata.Where(tm => tm.Subject == subject).FirstOrDefaultAsync();
+                                try
+                                {
 
-                                if (existingMetadata is not null)
-                                {
-                                    existingMetadata.Data = mappingJson;
-                                }
-                                else
-                                {
-                                    await dbContext.TokenMetadata.AddAsync(new()
+                                    JsonElement mappingJson =
+                                        await hc.GetFromJsonAsync<JsonElement>(file.RawUrl);
+                                    TokenMetadata? existingMetadata = await dbContext.TokenMetadata.Where(tm => tm.Subject == subject).FirstOrDefaultAsync();
+
+                                    if (existingMetadata is not null)
                                     {
-                                        Subject = subject,
-                                        Data = mappingJson
-                                    });
+                                        existingMetadata.Data = mappingJson;
+                                    }
+                                    else
+                                    {
+                                        await dbContext.TokenMetadata.AddAsync(new()
+                                        {
+                                            Subject = subject,
+                                            Data = mappingJson
+                                        });
+                                    }
+                                    _logger.LogInformation("Repo: {repo} Owner: {owner} Subject: {subject} added/updated...", _config["RegistryOwner"], _config["RegistryRepo"], subject);
+                                }
+                                catch
+                                {
+                                    _logger.LogInformation("Repo: {repo} Owner: {owner} File: {file} not found, deleting metadata...", _config["RegistryOwner"], _config["RegistryRepo"], file.RawUrl);
+                                    TokenMetadata? existingMetadata = await dbContext.TokenMetadata.Where(tm => tm.Subject == subject).FirstOrDefaultAsync();
+                                    if (existingMetadata is not null)
+                                    {
+                                        dbContext.TokenMetadata.Remove(existingMetadata);
+                                    }
                                 }
                                 await dbContext.SaveChangesAsync();
                             }

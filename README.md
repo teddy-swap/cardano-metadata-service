@@ -71,10 +71,17 @@ export REGISTRYREPO="cardano-token-registry"
 export GITHUBPAT=""
 ```
 
-Run the app:
+Install .NET dependencies and seed the database:
 
 ```bash
 dotnet restore
+dotnet tool install --global dotnet-ef
+dotnet ef database update
+```
+
+Run the service:
+
+```bash
 dotnet run
 ```
 

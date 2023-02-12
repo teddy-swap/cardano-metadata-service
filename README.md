@@ -1,3 +1,5 @@
+[![Docker Image CI](https://github.com/teddy-swap/cardano-metadata-service/actions/workflows/docker-image.yml/badge.svg)](https://github.com/teddy-swap/cardano-metadata-service/actions/workflows/docker-image.yml)
+
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 <!--

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -16,7 +17,7 @@ namespace TeddySwapCardanoMetadataService.Migrations
                 columns: table => new
                 {
                     Sha = table.Column<string>(type: "text", nullable: false),
-                    Date = table.Column<string>(type: "text", nullable: false)
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

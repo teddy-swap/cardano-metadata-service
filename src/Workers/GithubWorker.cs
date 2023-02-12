@@ -155,7 +155,6 @@ public class GithubWorker : BackgroundService
                 }
             }
 
-            _logger.LogInformation("Config Repo: {repo} Owner: {owner}", _config["RegistryOwner"], _config["RegistryRepo"]);
             await Task.Delay(1000 * 60, stoppingToken);
         }
     }

@@ -29,7 +29,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This ia simple Cardano Offchain Token Registry API Server implementation written in .NET/C#. For more information about the Cardano Offchain Token Registry, check out the official Cardano Foundation repository: https://github.com/cardano-foundation/cardano-token-registry.
+This is a simple Cardano Offchain Token Registry API Server implementation written in .NET/C#. For more information about the Cardano Offchain Token Registry, check out the official Cardano Foundation repository: https://github.com/cardano-foundation/cardano-token-registry.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

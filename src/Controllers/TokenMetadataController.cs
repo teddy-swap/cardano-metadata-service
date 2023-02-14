@@ -25,7 +25,7 @@ public class TokenMetadataController : ControllerBase
     public async Task<IActionResult> Get(string subject)
     {
         using TokenMetadataDbContext db = await _dbFactory.CreateDbContextAsync();
-        TokenMetadata? metadataEntry = await db.TokenMetadata.Where(tmd => tmd.Subject == subject).FirstOrDefaultAsync();
+        TokenMetadata? metadataEntry = await db.TokenMetadata.Where(tmd => tmd.Subject.ToLower() == subject.ToLower()).FirstOrDefaultAsync();
         if (metadataEntry is not null)
         {
             return Ok(metadataEntry.Data);

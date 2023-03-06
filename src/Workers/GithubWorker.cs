@@ -32,7 +32,7 @@ public class GithubWorker : BackgroundService
         {
             _logger.LogInformation("Syncing Mappings");
 
-            TokenMetadataDbContext dbContext = await _dbContextFactory.CreateDbContextAsync(stoppingToken);
+            using TokenMetadataDbContext dbContext = await _dbContextFactory.CreateDbContextAsync(stoppingToken);
 
             SyncState? syncState = await dbContext.SyncState.OrderByDescending(ss => ss.Date).FirstOrDefaultAsync();
 
